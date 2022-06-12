@@ -1,7 +1,7 @@
 import React from "react";
 import { questionSet1, questionSet2 } from "../Data/questionSets";
 import { questionSet } from "../Interfaces";
-import Box from '@mui/material/Box';
+import Box, { BoxProps } from '@mui/material/Box';
 import { Button } from "@mui/material";
 import Divider from '@mui/material/Divider';
 
@@ -11,35 +11,38 @@ import Divider from '@mui/material/Divider';
 //a function to jumble the answers
 
 const answers = [...questionSet1.AnswerSet];
-console.log('answers in Divider', answers);
+
+const Item: Function = (props: BoxProps) => {
+    const { sx, ...other } = props;
+    return (
+      <Box
+        sx={{
+          bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#101010' : '#fff'),
+          color: (theme) => (theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800'),
+          border: '1px solid',
+          borderColor: (theme) =>
+            theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
+          p: 1,
+          m: 1,
+          borderRadius: 2,
+          fontSize: '0.875rem',
+          fontWeight: '700',
+          ...sx,
+        }}
+        {...other}
+      />
+    );
+  }
 
 const RenderAnswers: Function = (questionSet1: questionSet) => {
     return(answers.map((answer) => {
-        return(<div>
-            <Box
-            sx={{
-            display: 'flex',
-            alignItems: 'center',
-            width: 'fit',
-            border: (theme) => `1px solid ${theme.palette.divider}`,
-            borderRadius: 1,
-            bgcolor: 'background.paper',
-            color: 'text.secondary',
-            '& svg': {
-                m: 1.5,
-            },
-            '& hr': {
-                mx: 0.5,
-            },
-            }}
-            
-      >
-          <>{answer.answerString1}</>
-          <Divider orientation="vertical" flexItem />
-          <>{answer.answerString2}</>
-        
-      </Box>
-        </div>)
+        return(   
+        <div style={{ width: '100%' }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+            <Item>{answer.answerString1}</Item>
+            <Item>{answer.answerString2}</Item>
+            </Box>
+      </div>)
     })  
     )
 };
