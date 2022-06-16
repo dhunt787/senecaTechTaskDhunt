@@ -8,6 +8,7 @@ const questionSet1: questionSet = {
             correctAnswer: 1,
             answerString1: "Stomach",
             answerString2: "Teeth",
+            answerString3: "Liver",
             correctAnswerPercentage: 0.3333
         },
         {
