@@ -1,21 +1,15 @@
-import React from "react";
+import React, { useRef } from "react";
 import { questionSet1, questionSet2 } from "../Data/questionSets";
 import { questionSet } from "../Interfaces";
 import Box, { BoxProps } from '@mui/material/Box';
 import { Button } from "@mui/material";
-import Divider from '@mui/material/Divider';
-import { NullLiteral } from "typescript";
-import { useEffect } from "react";
-import { Container } from "@mui/system";
 import Grid from "@mui/material/Grid";
-
+import QuestionStatus from "./QuestionStatus";
 
 // write a function to return a divider element for each set of questions
 // https://mui.com/material-ui/react-divider/
 //and a function to see if the answer is correct or not.
 //a function to jumble the answers
-
-const answers: questionSet["AnswerSet"] = [...questionSet1.AnswerSet];
 
 const Item: Function = (props: BoxProps) => {
     const { sx, ...other } = props;
@@ -49,63 +43,68 @@ const jumbleAnswers = (answers: questionSet["AnswerSet"]) => {
       answers[m] = answers[i];
       answers[i] = t;
   }
-  console.log('answers in jumbeleAnswers', jumbleAnswers);
   return answers;
-};
-
-const checkAnswers = (answerString1: String | null, answerString2: String | null, correctAnswerPercentage: Number) => {
-  console.log('answerString1', answerString1, 'answerString2', answerString2, 'correctAnswerPercentage', correctAnswerPercentage);
 };
 
 //TODO: render a third optional answer
 
-const RenderAnswers: Function = () => {
-  console.log('answers in RenderAnswers', answers, typeof answers);
-    var jumbledAnswers = jumbleAnswers(answers);
-    console.log('jumbledAnswers', jumbledAnswers);
+const checkPercentCorrectTotal = (percentCorrect: Array<number>) => {
+  console.log('percentCorrect in checkPercentTotal function', percentCorrect.length);
+  const sum = percentCorrect.reduce(function (previousAnswerPercentage, currAnswerPercentage) {
+    return previousAnswerPercentage + currAnswerPercentage;
+    }, 0);
+    return sum;
+  };
 
-    return(jumbledAnswers.map((answer, i) => {
-      console.log('answer', answer, 'i', i);
+
+//de-structure the answerSet data set. 
+const answers: questionSet["AnswerSet"] = [...questionSet1.AnswerSet];
+
+// creating an array for the percent correct data.
+const percentCorrectArray: Array<number> = [];
+
+/*jumble answer data that is loaded in. Doing this before the functional component
+definition stops the function being called again on re-render*/
+const jumbledAnswers = jumbleAnswers(answers);
+
+const QuestionSlider: React.FunctionComponent = () => {
+  // Initialize state
+  const correctAnswersSelected = useRef(false); //ensuring the correct answers state is not loaded as true on first render.
+  const [percentCorrect, setPercentCorrect] = React.useState(percentCorrectArray); //using array to push percentage correct values into.
+  const [answerStatusString, setAnswerStatusString] = React.useState('The answer is incorrect');
+  
+  const checkAnswers = (correctAnswerPercentage: number) => {
+    console.log('correctAnswerPercentage', correctAnswerPercentage);
+    setPercentCorrect(percentCorrect => percentCorrect.concat(correctAnswerPercentage));
+    console.log('percentCorrect after calling checkAnswers', percentCorrect);
+    //loop though percentCorrect and add the numbers togther.
+    let percentageCorrect = checkPercentCorrectTotal(percentCorrect);
+    console.log('percentageCorrect', percentageCorrect);
+    if (percentageCorrect >= 0.6) {
+      // TODO: set background color to different color
+      setAnswerStatusString('The answer is correct');
+
+    }
+  };
+
+    return(
+      <><p>{questionSet1.Question}</p>
+      {jumbledAnswers.map((answer, i) => {
       return(   
         <Box sx={{ flexGrow: 1 }} key={i}>
         <Grid container spacing={2}>
           <Grid item xs={4} >
-          <Item><Button type="submit" onClick={() => {checkAnswers(answer.answerString1, null, answer.correctAnswerPercentage)}}>{answer.answerString1}</Button></Item> 
+          <Item><Button type="submit" onClick={() => {checkAnswers(answer.correctAnswerPercentage)}}>{answer.answerString1}</Button></Item> 
           </Grid>
           {<Grid item xs={4}>
-            <Item ><Button type="submit" onClick={() => {checkAnswers(null, answer.answerString2, answer.correctAnswerPercentage)}}>{answer.answerString2}</Button></Item>
+            <Item ><Button type="submit" onClick={() => {console.log('answer.correctAnswerPercentage on the second answer', answer.correctAnswerPercentage), checkAnswers(answer.correctAnswerPercentage)}}>{answer.answerString2}</Button></Item>
           </Grid>}
         </Grid>
       </Box>)
-    })  
-    )
+    })
+    }
+    <QuestionStatus questionStatusString={answerStatusString} />
+    </>
+)
 };
-
-const QuestionSlider: React.FunctionComponent = () => {
-  // setup state here. 
-
-  //When component mounts, jumber the answers.
-  // useEffect(() => {
-  //   jumbleAnswers(answers);
-  // }, []);
-
-const calculateAnswer = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
-}
-
-    return (
-        <><p>{questionSet1.Question}</p>
-        <React.Fragment>
-            <RenderAnswers/>
-            <div>
-                <Button type="submit"
-                onClick={() => calculateAnswer}>
-                    Check Answer
-                </Button>
-            </div>
-        </React.Fragment></>
-
-    )
-}
-
 export default QuestionSlider;

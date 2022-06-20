@@ -1,14 +1,18 @@
 type Answer = {
     id: number,
-    correctAnswer: Number,
-    answerString1: String,
-    answerString2: String,
-    answerString3?: String,
-    correctAnswerPercentage: Number
+    correctAnswer: number,
+    answerString1: string,
+    answerString2: string,
+    answerString3?: string,
+    correctAnswerPercentage: number
 };
 
 
 export interface questionSet {
-    Question: String,
+    Question: string,
     AnswerSet: Array<Answer>
 };
+
+export interface questionStatusProps {
+    questionStatusString: string
+}

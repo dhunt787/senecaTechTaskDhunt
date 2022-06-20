@@ -1,9 +1,10 @@
 import React from "react";
+import { questionStatusProps } from "../Interfaces";
 
-const questionStatus: React.FunctionComponent  = ({}) => {
+const QuestionStatus: React.FunctionComponent<questionStatusProps> = (props): JSX.Element => {
     return (
-        <p>Your answer is incorrect</p>
+        <p>{props.questionStatusString}</p>
     )
 }
 
-export default questionStatus;
+export default QuestionStatus;
