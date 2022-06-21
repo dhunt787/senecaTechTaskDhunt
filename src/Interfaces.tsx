@@ -4,7 +4,9 @@ type Answer = {
     answerString1: string,
     answerString2: string,
     answerString3?: string,
-    correctAnswerPercentage: number
+    answer1CorrectPercentage: number,
+    answer2CorrectPercentage: number
+    answer3CorrectPercentage: number
 };
 
 
