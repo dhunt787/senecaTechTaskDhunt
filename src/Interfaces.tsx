@@ -3,7 +3,7 @@ type Answer = {
     correctAnswer: number,
     answerString1: string,
     answerString2: string,
-    answerString3?: string,
+    answerString3?: string | null,
     answer1CorrectPercentage: number,
     answer2CorrectPercentage: number
     answer3CorrectPercentage: number
