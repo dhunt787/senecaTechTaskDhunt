@@ -11,7 +11,7 @@ I assumed the shape of the data being fed into the component. In reality it mayb
 I was under the belief that I would not use the same data as in the animation. 
 
 ## Limitations:
-THe number of answers is not very scalable, but if you change the interface defining the dataset, it can be.
+The number of answers is not very scalable, but if you change the interface defining the dataset, it can be.
 Because I use a map and a custom box component to house each answer, it should be handle more data being provided to the component in the form of props.
 
 Not achieved:
